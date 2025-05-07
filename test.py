@@ -111,11 +111,14 @@ with st.sidebar:
     if st.button("GenThings"):
         args = argparse.Namespace()
         args.config = "./configs/api_assistant.json"
-        args.output_dir = os.path.abspath("./agent/api_assistant3")
+        args.output_dir = "./agent/api_assistant3"
+        #args.output_dir = os.path.abspath("./agent/api_assistant3")
         args.model = "gpt-4.1"
         args.provider = "openai"
         args.log_level = "INFO"
         args.task = "all"
+        if not os.path.exists(args.output_dir):
+            os.makedirs(args.output_dir, exist_ok=True)
         gen.generate_taskgraph(args)
         gen.init_worker(args)
 
