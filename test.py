@@ -24,7 +24,7 @@ from selenium.webdriver.chrome.service import Service
 import time
 from bs4 import BeautifulSoup
 
-INPUT_DIR = "./agent/api_assistant2"
+INPUT_DIR = "./agent/cs_test"
 MODEL["model_type_or_path"] = "gpt-4.1"
 LOG_LEVEL = "WARNING"
 WORKER_PREFIX = "assistant"
@@ -177,6 +177,7 @@ with st.sidebar:
         gen.generate_taskgraph(args)
         gen.init_worker(args)
         st.write("finished")
+        INPUT_DIR = "./agent/api_assistant3"
 
 # Chat History Rendering
 if debug: 
