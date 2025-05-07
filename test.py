@@ -176,6 +176,7 @@ with st.sidebar:
         st.write("got to gen")
         gen.generate_taskgraph(args)
         gen.init_worker(args)
+        st.write("finished")
 
 # Chat History Rendering
 if debug: 
