@@ -24,7 +24,7 @@ from selenium.webdriver.chrome.service import Service
 import time
 from bs4 import BeautifulSoup
 
-INPUT_DIR = "./agent/cs_test"
+st.session_state.INPUT_DIR = "./agent/cs_test"
 MODEL["model_type_or_path"] = "gpt-4.1"
 LOG_LEVEL = "WARNING"
 WORKER_PREFIX = "assistant"
@@ -107,8 +107,8 @@ def blank_slate():
     st.session_state.workers.append("")  # ensure worker list maintains equivalent index to history
 
 # env, config derived from Arklex, "run.py" file
-os.environ["DATA_DIR"] = INPUT_DIR
-config = json.load(open(os.path.join(INPUT_DIR, "taskgraph.json")))
+os.environ["DATA_DIR"] = st.session_state.INPUT_DIR
+config = json.load(open(os.path.join(st.session_state.INPUT_DIR, "taskgraph.json")))
 env = Env(
     tools = config.get("tools", []),
     workers = config.get("workers", []),
@@ -180,7 +180,7 @@ with st.sidebar:
         if os.path.isdir("./agent/api_assistant3"):
             os.listdir("./agent/api_assistant3")
             st.write("is path")
-        INPUT_DIR = "./agent/api_assistant3"
+        st.session_state.INPUT_DIR = "./agent/api_assistant3"
         st.write("new")
         st.write(os.listdir("."))
 
@@ -188,8 +188,9 @@ with st.sidebar:
 if debug: 
     st.write(st.session_state.workers)
     st.write(os.listdir("./agent"))
-    st.write(INPUT_DIR)
-    INPUT_DIR="./agent/api_assistant3"
+    st.session_state.INPUT_DIR="./agent/api_assistant3"
+    st.write(st.session_state.INPUT_DIR)
+    
 for message, workers in zip(st.session_state.history, st.session_state.workers):
     history_icon = LOGO_MICRO if message["role"] == "assistant" else ICON_HUMAN
     with st.chat_message(message["role"], avatar=history_icon):
@@ -208,7 +209,7 @@ if prompt := st.chat_input("Ask Ryaa"):
     st.session_state.history.append({"role": USER_PREFIX, "content": prompt})
     st.session_state.workers.append("")    
     with st.spinner("Loading..."):
-        output, st.session_state.params, hitl = agent_response(INPUT_DIR, st.session_state.history, 
+        output, st.session_state.params, hitl = agent_response(st.session_state.INPUT_DIR, st.session_state.history, 
                                                                prompt, st.session_state.params, env)
         
         workers, sources = gen_worker_list(st.session_state.params) 
