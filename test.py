@@ -160,8 +160,8 @@ with st.sidebar:
                     time.sleep(0.75)
     
     if st.button("GenThings"):
-        text = get_website_content("https://www.alphavantage.co/documentation/")
-        st.write(text)
+        #text = get_website_content("https://www.alphavantage.co/documentation/")
+        #st.write(text)
         
         args = argparse.Namespace()
         args.config = "./configs/api_assistant.json"
