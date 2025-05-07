@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from pprint import pprint
 import pandas as pd
 import io
+import argparse
 from sl.utils import agent_response, gen_stream, gen_worker_list, display_workers, get_model_provider, load_secrets
 load_secrets()
 
@@ -15,9 +16,10 @@ from arklex.orchestrator.orchestrator import AgentOrg
 from arklex.utils.model_config import MODEL
 from arklex.utils.model_provider_config import LLM_PROVIDERS
 from arklex.env.env import Env
+import create as gen
 
 
-INPUT_DIR = "./agent/api_assistant2"
+INPUT_DIR = "./agent/api_assistant3"
 MODEL["model_type_or_path"] = "gpt-4.1"
 LOG_LEVEL = "WARNING"
 WORKER_PREFIX = "assistant"
@@ -105,6 +107,17 @@ with st.sidebar:
                 with st.spinner(" "):
                     blank_slate()
                     time.sleep(0.75)
+    
+    if st.button("GenThings"):
+        args = argparse.Namespace()
+        args.config = "./configs/api_assistant"
+        args.output = "./agent/api_assistant3"
+        args.model = "gpt-4.1"
+        args.provider = "openai"
+        args.log_level = "INFO"
+        args.task = "all"
+        gen.generate_taskgraph(args)
+        gen.init_worker(args)
 
 # Chat History Rendering
 if debug: 
