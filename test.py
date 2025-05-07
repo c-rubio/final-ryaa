@@ -19,7 +19,7 @@ from arklex.env.env import Env
 import create as gen
 
 
-INPUT_DIR = "./agent/api_assistant3"
+INPUT_DIR = "./agent/api_assistant2"
 MODEL["model_type_or_path"] = "gpt-4.1"
 LOG_LEVEL = "WARNING"
 WORKER_PREFIX = "assistant"
@@ -110,8 +110,8 @@ with st.sidebar:
     
     if st.button("GenThings"):
         args = argparse.Namespace()
-        args.config = "./configs/api_assistant"
-        args.output = "./agent/api_assistant3"
+        args.config = "./configs/api_assistant.json"
+        args.output_dir = "./agent/api_assistant3"
         args.model = "gpt-4.1"
         args.provider = "openai"
         args.log_level = "INFO"
