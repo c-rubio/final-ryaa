@@ -25,6 +25,11 @@
       "id": "e5c2b9d0-1f2a-8b3c-e4d5-678901fghi34", 
       "name": "RequestWorker", 
       "path": "api_worker.py" 
+    },
+    {
+      "id": "26bb6634-3bee-417d-ad75-23269ac17bc3", 
+      "name": "MessageWorker", 
+      "path": "message_worker.py"
     }
   ],
   "tools": []
