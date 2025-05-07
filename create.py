@@ -38,9 +38,13 @@ def generate_taskgraph(args):
 
 def init_worker(args):
     ## TODO: Need to customized based on different use cases
+    st.write("at init worker")
     config = json.load(open(args.config))
+    st.write("loaded json")
     workers = config["workers"]
+    
     worker_names = set([worker["name"] for worker in workers])
+    st.write("past workers")
     if "FaissRAGWorker" in worker_names:
         logger.info("Initializing FaissRAGWorker...")
         build_rag(args.output_dir, config["rag_docs"])
