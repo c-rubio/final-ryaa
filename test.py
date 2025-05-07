@@ -159,12 +159,13 @@ with st.sidebar:
                     blank_slate()
                     time.sleep(0.75)
     st.write(os.listdir("."))
+    config_area = st.text_input("Config Location", "./configs/api_assistant.json")
     if st.button("GenThings"):
         #text = get_website_content("https://www.alphavantage.co/documentation/")
         #st.write(text)
         
         args = argparse.Namespace()
-        args.config = "./configs/api_assistant.json"
+        args.config = config_area
         args.output_dir = "./agent/api_assistant3"
         #args.output_dir = os.path.abspath("./agent/api_assistant3")
         args.model = "gpt-4.1"
