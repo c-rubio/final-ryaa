@@ -158,7 +158,7 @@ with st.sidebar:
                 with st.spinner(" "):
                     blank_slate()
                     time.sleep(0.75)
-    
+    st.write(os.listdir("."))
     if st.button("GenThings"):
         #text = get_website_content("https://www.alphavantage.co/documentation/")
         #st.write(text)
@@ -177,7 +177,12 @@ with st.sidebar:
         gen.generate_taskgraph(args)
         gen.init_worker(args)
         st.write("finished")
+        if os.path.isdir("./agent/api_assistant3"):
+            os.listdir("./agent/api_assistant3")
+            st.write("is path")
         INPUT_DIR = "./agent/api_assistant3"
+        st.write("new")
+        st.write(os.listdir("."))
 
 # Chat History Rendering
 if debug: 
