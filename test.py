@@ -189,6 +189,7 @@ if debug:
     st.write(st.session_state.workers)
     st.write(os.listdir("./agent"))
     st.write(INPUT_DIR)
+    INPUT_DIR="./agent/api_assistant3"
 for message, workers in zip(st.session_state.history, st.session_state.workers):
     history_icon = LOGO_MICRO if message["role"] == "assistant" else ICON_HUMAN
     with st.chat_message(message["role"], avatar=history_icon):
