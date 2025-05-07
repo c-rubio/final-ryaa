@@ -169,7 +169,7 @@ with st.sidebar:
         #args.output_dir = os.path.abspath("./agent/api_assistant3")
         args.model = "gpt-4.1"
         args.provider = "openai"
-        args.log_level = "INFO"
+        args.log_level = "DEBUG"
         args.task = "all"
         if not os.path.exists(args.output_dir):
             os.makedirs(args.output_dir, exist_ok=True)
