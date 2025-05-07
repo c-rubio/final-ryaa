@@ -47,25 +47,54 @@ models = (
 def get_website_content(url):
     driver = None
     try:
-        # Using on Local
+        # Configure Chrome options
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
         options.add_argument('--disable-gpu')
         options.add_argument('--window-size=1920,1200')
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
-                                  options=options)
-        st.write(f"DEBUG:DRIVER:{driver}")
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        
+        # Add important signal handling options
+        options.add_argument('--disable-hang-monitor')
+        options.add_argument('--disable-crash-reporter')
+        
+        # Create and configure driver
+        st.write("DEBUG: Initializing Chrome driver...")
+        driver = webdriver.Chrome(
+            service=Service(ChromeDriverManager().install()),
+            options=options
+        )
+        
+        # Set timeout to prevent indefinite hanging
+        driver.set_page_load_timeout(10)
+        
+        # Load the page
+        st.write(f"DEBUG: Loading URL: {url}")
         driver.get(url)
-        time.sleep(5)
+        
+        # Capture content
         html_doc = driver.page_source
+        st.write("DEBUG: Content retrieved successfully")
+        
+        # Process content AFTER closing the driver
         driver.quit()
+        driver = None
+        st.write("DEBUG: Driver closed")
+        
+        # Now process the HTML
         soup = BeautifulSoup(html_doc, "html.parser")
         return soup.get_text()
     except Exception as e:
         st.write(f"DEBUG:INIT_DRIVER:ERROR:{e}")
+        return f"Error: {str(e)}"
     finally:
-        if driver is not None: driver.quit()
-    return None
+        if driver is not None:
+            try:
+                st.write("DEBUG: Attempting to quit driver in finally block")
+                driver.quit()
+            except:
+                st.write("DEBUG: Error quitting driver in finally block")
 
 def blank_slate():
     st.session_state.history = []
