@@ -167,6 +167,7 @@ with st.sidebar:
     if st.button("GenThings"):
         text = get_website_content("https://www.alphavantage.co/documentation/")
         st.write(text)
+        
         args = argparse.Namespace()
         args.config = "./configs/api_assistant.json"
         args.output_dir = "./agent/api_assistant3"
@@ -177,6 +178,7 @@ with st.sidebar:
         args.task = "all"
         if not os.path.exists(args.output_dir):
             os.makedirs(args.output_dir, exist_ok=True)
+        st.write("got to gen")
         gen.generate_taskgraph(args)
         gen.init_worker(args)
 
