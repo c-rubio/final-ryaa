@@ -1,7 +1,6 @@
 # audio_helpers.py
 import os
 import numpy as np
-import pyaudio
 import soundfile as sf
 from openai import OpenAI
 from io import BytesIO
