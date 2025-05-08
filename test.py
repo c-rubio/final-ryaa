@@ -167,7 +167,7 @@ with st.sidebar:
                     time.sleep(0.75)
 
     config_path = st.text_input("Config Location", "./configs/api_test.json")
-    col3, col4 = st.columns[1, 1]
+    col3, col4 = st.columns([1, 1], vertical_alignment="center")
     with col3:
         if st.button("Create New Agent"):
             new_agent_config()
