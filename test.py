@@ -98,10 +98,10 @@ def blank_slate():
     st.session_state.empty = True
 
     # derived from Arklex, grab configured start response from config
-    for node in config["nodes"]:
-        if node[1].get("type", "") == "start":
-            start_message = node[1]["attribute"]["value"]
-            break
+    #for node in config["nodes"]:
+    #    if node[1].get("type", "") == "start":
+    #        start_message = node[1]["attribute"]["value"]
+    #        break
 
     st.session_state.history.append({"role": WORKER_PREFIX, "content": start_message})
     st.session_state.workers.append("")  # ensure worker list maintains equivalent index to history
