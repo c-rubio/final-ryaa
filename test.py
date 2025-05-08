@@ -30,10 +30,10 @@ st.session_state.custom_keys = []
 st.session_state.tmp_api_name = ""
 st.session_state.tmp_api_key = ""
 st.session_state.tmp_api_info = {
-    "api_name": "",
-    "api_key": "",
-    "docs_link": "",
-    "api_desc": ""
+    "api_name": None,
+    "api_key": None,
+    "docs_link": None,
+    "api_desc": None
 }
 MODEL["model_type_or_path"] = "gpt-4.1"
 LOG_LEVEL = "WARNING"
@@ -204,31 +204,32 @@ with st.sidebar:
     #api_key_val = st.text_input("API Key Value")
     if st.button("Create New Agent"):
         new_agent_config()
-        st.write(st.session_state.tmp_api_info)
-        with st.status("Creating New Agent..."):
-            st.session_state.custom_keys.append(st.session_state.tmp_api_info["api_name"])
-            os.environ[st.session_state.tmp_api_info["api_name"]] = st.session_state.tmp_api_info["api_key"]
-            st.write("Opening config...")
-            with open(config_path, "r") as file:
-                agent_config = json.load(file)
+        if st.session_state.tmp_api_info["api_name"]:
+            st.write(st.session_state.tmp_api_info)
+            with st.status("Creating New Agent..."):
+                st.session_state.custom_keys.append(st.session_state.tmp_api_info["api_name"])
+                os.environ[st.session_state.tmp_api_info["api_name"]] = st.session_state.tmp_api_info["api_key"]
+                st.write("Opening config...")
+                with open(config_path, "r") as file:
+                    agent_config = json.load(file)
 
-            rag_doc = {
-                "source": st.session_state.tmp_api_info["docs_link"],
-                "desc": st.session_state.tmp_api_info["api_desc"],
-                "num": 1
-            }
-            agent_config["rag_docs"].append(rag_doc)
-            st.write("Writing to config...")
-            with open(config_path, "w") as file:
-                json.dump(agent_config, file, indent=2)
-            #st.success(f"New Doc Added {rag_link}")
-            st.write("Generating new agent...")
-            gen_agent(config_path,model_option, get_model_provider(model_option))
-            st.write("Clearing chat...")
-            st.session_state.tmp_api_info = {key: None for key in st.session_state.tmp_api_info}
-            st.session_state.INPUT_DIR = config_option
-            blank_slate()
-            #st.rerun()
+                rag_doc = {
+                    "source": st.session_state.tmp_api_info["docs_link"],
+                    "desc": st.session_state.tmp_api_info["api_desc"],
+                    "num": 1
+                }
+                agent_config["rag_docs"].append(rag_doc)
+                st.write("Writing to config...")
+                with open(config_path, "w") as file:
+                    json.dump(agent_config, file, indent=2)
+                #st.success(f"New Doc Added {rag_link}")
+                st.write("Generating new agent...")
+                gen_agent(config_path,model_option, get_model_provider(model_option))
+                st.write("Clearing chat...")
+                st.session_state.tmp_api_info = {key: None for key in st.session_state.tmp_api_info}
+                st.session_state.INPUT_DIR = config_option
+                blank_slate()
+                #st.rerun()
 
 os.environ["DATA_DIR"] = st.session_state.INPUT_DIR
 config = json.load(open(os.path.join(st.session_state.INPUT_DIR, "taskgraph.json")))
