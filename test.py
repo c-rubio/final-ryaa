@@ -18,7 +18,8 @@ from arklex.env.env import Env
 
 st.session_state.gen_counter = 0
 st.session_state.custom_keys = []
-st.session_state.agent_btn_disabled = True
+if "agent_btn_disabled" not in st.session_state:
+    st.session_state.agent_btn_disabled = True
 if "tmp_api_info" not in st.session_state:
     st.session_state.tmp_api_info = {
         "api_name": None,
@@ -143,11 +144,11 @@ with st.sidebar:
     #     "./agent/api_agent0",
     #     "./agent/cs_test",
     #     "./agent/cs_test2")
-    #)
+    #)  if debug:
     #st.session_state.INPUT_DIR=config_option
-
-    if st.button("reload config"):
-        reset_config(debug)
+    if debug:
+        if st.button("reload config"):
+            reset_config(debug)
     
     model_option = st.selectbox(
         "Model", models, 
@@ -167,13 +168,14 @@ with st.sidebar:
                 with st.spinner(" "):
                     blank_slate()
                     time.sleep(0.75)
-
-    config_path = st.text_input("Config Location", "./configs/api_test.json")
+    #config_path = f"./configs/ryaa_config.json{st.session_state.gen_counter}"
+    config_path = st.text_input("Config Location", "./configs/ryaa_config.json")
     col3, col4 = st.columns([0.5, 0.5], vertical_alignment="center")
     with col3:
         if st.button("Create Agent"):
             new_agent_config()
             st.session_state.agent_btn_disabled = False
+            st.rerun()
     with col4:
         if st.button("Load Agent", disabled=st.session_state.agent_btn_disabled):
             if debug: st.write(st.session_state.tmp_api_info)
