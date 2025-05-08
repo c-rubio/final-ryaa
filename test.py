@@ -141,7 +141,8 @@ with st.sidebar:
     config_option = st.selectbox(
         "Agent",
         ("./agent/blb_agent",
-         "./agent/ryaa_test")
+         "./agent/ryaa_test",
+         "./agent/api_agent0")
     #     "./agent/api_agent0",
     #     "./agent/cs_test",
     #     "./agent/cs_test2")
