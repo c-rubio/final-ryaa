@@ -34,7 +34,13 @@ if "tmp_api_info" not in st.session_state:
     }
 if "INPUT_DIR" not in st.session_state:
     st.session_state.INPUT_DIR = "./agent/cs_test"
-
+    os.environ["DATA_DIR"] = st.session_state.INPUT_DIR
+    config = json.load(open(os.path.join(st.session_state.INPUT_DIR, "taskgraph.json")))
+    env = Env(
+    tools = config.get("tools", []),
+    workers = config.get("workers", []),
+    slotsfillapi = config["slotfillapi"]
+    )
 MODEL["model_type_or_path"] = "gpt-4.1"
 LOG_LEVEL = "WARNING"
 WORKER_PREFIX = "assistant"
@@ -96,7 +102,7 @@ def blank_slate():
     st.session_state.params = {}
     st.session_state.workers = []
     st.session_state.empty = True
-    reset_config()
+    #reset_config()
 
     # derived from Arklex, grab configured start response from config
     #for node in config["nodes"]:
@@ -195,17 +201,11 @@ with st.sidebar:
             st.write("Clearing chat...")
             st.session_state.tmp_api_info = {key: None for key in st.session_state.tmp_api_info}
             st.session_state.INPUT_DIR = config_option
-            reset_config(debug)
+            config, env = reset_config(debug)
             blank_slate()
             #st.rerun()
 
-#os.environ["DATA_DIR"] = st.session_state.INPUT_DIR
-#config = json.load(open(os.path.join(st.session_state.INPUT_DIR, "taskgraph.json")))
-#env = Env(
-#    tools = config.get("tools", []),
-#    workers = config.get("workers", []),
-#    slotsfillapi = config["slotfillapi"]
-#)
+
 
 # Chat History Rendering
 if debug: 
