@@ -16,6 +16,7 @@ from arklex.env.env import Env
 
 st.session_state.gen_counter = 0
 st.session_state.custom_keys = []
+st.session_state.agent_btn_disabled = False
 if "tmp_api_info" not in st.session_state:
     st.session_state.tmp_api_info = {
         "api_name": None,
@@ -166,36 +167,39 @@ with st.sidebar:
                     time.sleep(0.75)
 
     config_path = st.text_input("Config Location", "./configs/api_test.json")
-
-    if st.button("Create New Agent"):
-        new_agent_config()
-    if st.button("Load Agent"):
-        if debug: st.write(st.session_state.tmp_api_info)
-        with st.status("Creating New Agent..."):
-            st.session_state.custom_keys.append(st.session_state.tmp_api_info["api_name"])
-            os.environ[st.session_state.tmp_api_info["api_name"]] = st.session_state.tmp_api_info["api_key"]
-            st.write("Opening config...")
-            with open(config_path, "r") as file:
-                agent_config = json.load(file)
-            rag_doc = {
-                "source": st.session_state.tmp_api_info["docs_link"],
-                "desc": st.session_state.tmp_api_info["api_desc"],
-                "num": 1
-            }
-
-            agent_config["rag_docs"].append(rag_doc)
-            st.write("Writing to config...")
-            with open(config_path, "w") as file:
-                json.dump(agent_config, file, indent=2)
-            #st.success(f"New Doc Added {rag_link}")
-            st.write("Generating new agent...")
-            gen_agent(config_path,model_option, get_model_provider(model_option))
-            st.write("Clearing chat...")
-            st.session_state.tmp_api_info = {key: None for key in st.session_state.tmp_api_info}
-            st.session_state.INPUT_DIR = "./agent/api_agent0"
-            reset_config(debug)
-            blank_slate()
-            #st.rerun()
+    col3, col4 = st.columns[1, 1]
+    with col3:
+        if st.button("Create New Agent"):
+            new_agent_config()
+            st.session_state.agent_btn_disabled = True
+    with col4:
+        if st.button("Load Agent", disabled=st.session_state.agent_btn_disabled):
+            if debug: st.write(st.session_state.tmp_api_info)
+            with st.status("Creating New Agent..."):
+                st.session_state.custom_keys.append(st.session_state.tmp_api_info["api_name"])
+                os.environ[st.session_state.tmp_api_info["api_name"]] = st.session_state.tmp_api_info["api_key"]
+                st.write("Opening config...")
+                with open(config_path, "r") as file:
+                    agent_config = json.load(file)
+                rag_doc = {
+                    "source": st.session_state.tmp_api_info["docs_link"],
+                    "desc": st.session_state.tmp_api_info["api_desc"],
+                    "num": 1
+                }
+    
+                agent_config["rag_docs"].append(rag_doc)
+                st.write("Writing to config...")
+                with open(config_path, "w") as file:
+                    json.dump(agent_config, file, indent=2)
+                #st.success(f"New Doc Added {rag_link}")
+                st.write("Generating new agent...")
+                gen_agent(config_path,model_option, get_model_provider(model_option))
+                st.write("Clearing chat...")
+                st.session_state.tmp_api_info = {key: None for key in st.session_state.tmp_api_info}
+                st.session_state.INPUT_DIR = "./agent/api_agent0"
+                reset_config(debug)
+                blank_slate()
+                #st.rerun()
 
 
 
