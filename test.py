@@ -18,7 +18,7 @@ from arklex.env.env import Env
 
 st.session_state.gen_counter = 0
 st.session_state.custom_keys = []
-st.session_state.agent_btn_disabled = False
+st.session_state.agent_btn_disabled = True
 if "tmp_api_info" not in st.session_state:
     st.session_state.tmp_api_info = {
         "api_name": None,
@@ -173,7 +173,7 @@ with st.sidebar:
     with col3:
         if st.button("Create Agent"):
             new_agent_config()
-            st.session_state.agent_btn_disabled = True
+            st.session_state.agent_btn_disabled = False
     with col4:
         if st.button("Load Agent", disabled=st.session_state.agent_btn_disabled):
             if debug: st.write(st.session_state.tmp_api_info)
@@ -202,6 +202,7 @@ with st.sidebar:
                 reset_config(debug)
                 blank_slate()
                 #st.rerun()
+                st.session_state.agent_btn_disabled = True
 
 
 
@@ -219,7 +220,7 @@ for message, workers in zip(st.session_state.history, st.session_state.workers):
             st.write(st.session_state.params["memory"]["trajectory"])
         st.write(message["content"])
         display_workers(workers)
-
+prompt = None
 if voice:
     # Capture audio input
     audio_data = st.audio_input("Record your question for Ryaa")
