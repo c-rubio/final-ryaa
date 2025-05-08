@@ -175,7 +175,7 @@ with st.sidebar:
         if st.button("Create Agent"):
             new_agent_config()
             st.session_state.agent_btn_disabled = False
-            st.rerun()
+            #st.rerun()
     with col4:
         if st.button("Load Agent", disabled=st.session_state.agent_btn_disabled):
             if debug: st.write(st.session_state.tmp_api_info)
