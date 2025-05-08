@@ -18,11 +18,7 @@ from arklex.utils.model_provider_config import LLM_PROVIDERS
 from arklex.env.env import Env
 import create as gen
 
-from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
 import time
-from bs4 import BeautifulSoup
 
 #st.session_state.INPUT_DIR = "./agent/cs_test"
 st.session_state.gen_counter = 0
@@ -36,6 +32,9 @@ if "tmp_api_info" not in st.session_state:
         "docs_link": None,
         "api_desc": None
     }
+if "INPUT_DIR" not in st.session_state:
+    st.session_state.INPUT_DIR = "./agent/cs_test"
+
 MODEL["model_type_or_path"] = "gpt-4.1"
 LOG_LEVEL = "WARNING"
 WORKER_PREFIX = "assistant"
@@ -54,6 +53,7 @@ models = (
             "gemini-2.5-pro-preview-03-25",
             "claude-3-7-sonnet-20250219"
         )
+
 @st.dialog("Add in API functionality")
 def new_agent_config():
     api_info = st.session_state.tmp_api_info
@@ -70,62 +70,33 @@ def new_agent_config():
         api_info["api_desc"] = api_desc
         st.session_state.tmp_api_info = api_info
         st.rerun()
+
 def load_json(path):
     with open(path, 'r') as file:
         data = json.load(file)
     return data
-def get_website_content(url):
-    driver = None
-    try:
-        st.write("DEBUG: Setting up Chrome options...")
-        options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
-        options.add_argument('--disable-gpu')
-        options.add_argument('--window-size=1920,1200')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
-        
-        st.write("DEBUG: Initializing Chrome driver...")
-        driver = webdriver.Chrome(
-            service=Service(ChromeDriverManager().install()),
-            options=options
+
+def reset_config(debug=True):
+        data_dir = st.session_state.INPUT_DIR
+        os.environ["DATA_DIR"] = data_dir
+        if debug: st.write(os.environ["DATA_DIR"])
+        config = json.load(open(os.path.join(data_dir, "taskgraph.json")))
+        env = Env(
+            tools = config.get("tools", []),
+            workers = config.get("workers", []),
+            slotsfillapi = config["slotfillapi"]
         )
-        driver.set_page_load_timeout(15)
-        
-        st.write(f"DEBUG: Loading URL: {url}")
-        driver.get(url)
-        st.write("DEBUG: Page loaded")
-        
-        html_doc = driver.page_source
-        st.write("DEBUG: Got page source, length: " + str(len(html_doc)))
-        
-        # Close the driver BEFORE processing content
-        st.write("DEBUG: Closing driver...")
-        driver.quit()
-        driver = None
-        st.write("DEBUG: Driver closed")
-        
-        # Process content after driver is closed
-        soup = BeautifulSoup(html_doc, "html.parser")
-        text = soup.get_text()
-        st.write(f"DEBUG: Extracted text, length: {len(text)}")
-        return text
-    except Exception as e:
-        st.write(f"DEBUG: Error: {str(e)}")
-        return f"Error: {str(e)}"
-    finally:
-        if driver is not None:
-            st.write("DEBUG: Quitting driver in finally block")
-            try:
-                driver.quit()
-                st.write("DEBUG: Successfully quit driver in finally block")
-            except Exception as e:
-                st.write(f"DEBUG: Error quitting driver in finally block: {e}")
+        if debug: 
+            st.write(config)
+            st.write(load_json(os.path.join(data_dir, "taskplanning.json")))
+        return config, env
+
 def blank_slate():
     st.session_state.history = []
     st.session_state.params = {}
     st.session_state.workers = []
     st.session_state.empty = True
+    reset_config()
 
     # derived from Arklex, grab configured start response from config
     #for node in config["nodes"]:
@@ -163,26 +134,19 @@ if "history" not in st.session_state:
 with st.sidebar:
     voice = st.toggle("Voice")
     debug = st.toggle("Debug Mode", value=False)
-    config_option = st.selectbox(
-        "Agent",
-        ("./agent/api_assistant",
-         "./agent/api_assistant2",
-         "./agent/api_agent0",
-         "./agent/cs_test",
-         "./agent/cs_test2")
-    )
-    st.session_state.INPUT_DIR=config_option
+    config_option = "./agent/api_agent0"
+    #config_option = st.selectbox(
+    #    "Agent",
+    #    ("./agent/api_assistant",
+    #     "./agent/api_assistant2",
+    #     "./agent/api_agent0",
+    #     "./agent/cs_test",
+    #     "./agent/cs_test2")
+    #)
+    #st.session_state.INPUT_DIR=config_option
+
     if st.button("reload config"):
-        os.environ["DATA_DIR"] = st.session_state.INPUT_DIR
-        st.write(os.environ["DATA_DIR"])
-        config = json.load(open(os.path.join(st.session_state.INPUT_DIR, "taskgraph.json")))
-        env = Env(
-            tools = config.get("tools", []),
-            workers = config.get("workers", []),
-            slotsfillapi = config["slotfillapi"]
-        )
-        st.write(config)
-        st.write(load_json(os.path.join(config_option, "taskplanning.json")))
+        config, env = reset_config(debug)
     
     model_option = st.selectbox(
         "Model", models, 
@@ -220,6 +184,7 @@ with st.sidebar:
                 "desc": st.session_state.tmp_api_info["api_desc"],
                 "num": 1
             }
+
             agent_config["rag_docs"].append(rag_doc)
             st.write("Writing to config...")
             with open(config_path, "w") as file:
@@ -230,16 +195,17 @@ with st.sidebar:
             st.write("Clearing chat...")
             st.session_state.tmp_api_info = {key: None for key in st.session_state.tmp_api_info}
             st.session_state.INPUT_DIR = config_option
+            reset_config(debug)
             blank_slate()
             #st.rerun()
 
-os.environ["DATA_DIR"] = st.session_state.INPUT_DIR
-config = json.load(open(os.path.join(st.session_state.INPUT_DIR, "taskgraph.json")))
-env = Env(
-    tools = config.get("tools", []),
-    workers = config.get("workers", []),
-    slotsfillapi = config["slotfillapi"]
-)
+#os.environ["DATA_DIR"] = st.session_state.INPUT_DIR
+#config = json.load(open(os.path.join(st.session_state.INPUT_DIR, "taskgraph.json")))
+#env = Env(
+#    tools = config.get("tools", []),
+#    workers = config.get("workers", []),
+#    slotsfillapi = config["slotfillapi"]
+#)
 
 # Chat History Rendering
 if debug: 
