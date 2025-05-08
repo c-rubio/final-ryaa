@@ -1,9 +1,9 @@
 {
-  "role": "personal assistant",
-  "user_objective": "The personal assistant leverages VoiceMessageWorker for real-time voice interactions, FaissRAGWorker for retrieval augmented generation, MessageWorker for managing conversations, SearchWorker for web queries, and DefaultWorker for fallback operations.",
-  "builder_objective": "The personal assistant orchestrates voice interactions, web search, and conversational AI to help with everyday tasks such as ordering rides, setting reminders, sending messages, and initiating phone calls.",
-  "domain": "personal intelligence",
-  "intro": "RYAA (Real-Time Yielding Autonomous Assistant) for Senior Project II is developed by top computer science seniors. It integrates advanced voice interaction, conversational AI, and web search capabilities via specialized workers to assist with daily operations.",
+  "role": "AI Personal Assistant with API Integration",
+  "user_objective": "The assistant provides personalized help for everyday tasks while leveraging API integration capabilities to access real-time data and execute web service calls on the user's behalf.",
+  "builder_objective": "This assistant orchestrates web search, conversational AI, and API integration to help with retrieving financial data, executing API calls to various services, and finding information through web searches.",
+  "domain": "Personal Intelligence & Web API Integration",
+  "intro": "RYAA (Real-Time Yielding Autonomous Assistant) is an advanced personal assistant developed by top computer science seniors at North Carolina A&T State University. It integrates conversational AI, web search capabilities, and dynamic API integration to assist with information retrieval and accessing real-time data from various web services.",
   "task_docs": [],
   "rag_docs": [
     {
@@ -32,17 +32,19 @@
       "num": 1
     }
   ],
-  "tasks": [],
+  "tasks": [
+    "Fetch Real-time Stock Price via API",
+    "Understand API Endpoint Usage",
+    "Execute Generic API Call based on Documentation",
+    "Conduct Web Searches for User Queries",
+    "Retrieve and Summarize Information from RAG Documents",
+    "Analyze Financial Data from Multiple Sources"
+  ],
   "workers": [
     {
       "id": "9aa47724-0b77-4752-9528-cf4b06a46915",
       "name": "FaissRAGWorker",
       "path": "faiss_rag_worker.py"
-    },
-    {
-      "id": "13066189-c47d-4f51-ab5d-4075aedfc880",
-      "name": "SchedulerWorker",
-      "path": "scheduler_worker.py"
     },
     {
       "id": "26bb6634-3bee-417d-ad75-23269ac17bc3",
@@ -55,9 +57,9 @@
       "path": "search_worker.py"
     },
     {
-      "id": "b06c2b58-12c5-41fe-9838-e93b530e42e8",
-      "name": "DefaultWorker",
-      "path": "default_worker.py"
+      "id": "e5c2b9d0-1f2a-8b3c-e4d5-678901fghi34",
+      "name": "RequestWorker",
+      "path": "api_worker.py"
     }
   ],
   "tools": []
