@@ -189,7 +189,7 @@ with st.sidebar:
 if debug: 
     st.write(st.session_state.workers)
     st.write(os.listdir("./agent"))
-    #st.session_state.INPUT_DIR="./agent/api_assistant3"
+    st.session_state.INPUT_DIR="./agent/cs_test2"
     #st.write(st.session_state.INPUT_DIR)
     
 for message, workers in zip(st.session_state.history, st.session_state.workers):
