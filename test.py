@@ -137,7 +137,7 @@ with st.sidebar:
         "Agent",
         ("./agent/api_assistant",
          "./agent/api_assistant2",
-         "./agent/api_test_final"
+         "./agent/api_test_final",
          "./agent/cs_test",
          "./agent/cs_test2")
     )
