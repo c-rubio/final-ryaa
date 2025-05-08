@@ -26,6 +26,15 @@ from bs4 import BeautifulSoup
 
 #st.session_state.INPUT_DIR = "./agent/cs_test"
 st.session_state.gen_counter = 0
+st.session_state.custom_keys = []
+st.session_state.tmp_api_name = ""
+st.session_state.tmp_api_key = ""
+st.session_state.tmp_api_info = {
+    "api_name": "",
+    "api_key": "",
+    "docs_link": "",
+    "api_desc": ""
+}
 MODEL["model_type_or_path"] = "gpt-4.1"
 LOG_LEVEL = "WARNING"
 WORKER_PREFIX = "assistant"
@@ -44,7 +53,23 @@ models = (
             "gemini-2.5-pro-preview-03-25",
             "claude-3-7-sonnet-20250219"
         )
+@st.dialog("Add in API functionality")
+def new_agent_config():
+    api_info = st.session_state.tmp_api_info
+    
+    api_name = st.text_input("API Key Name")
+    api_key = st.text_input("API Key")
+    docs_link = st.text_input("API Documentation Source", placeholder="enter api doc link...")
+    api_desc = st.text_input("API Docs Description", placeholder="API docs for...")
 
+    if st.button("Submit"):
+        api_info["api_name"] = api_name
+        api_info["api_key"] = api_key
+        api_info["docs_link"] = docs_link
+        api_info["api_desc"] = api_desc
+        st.session_state.tmp_api_info = api_info
+        st.rerun()
+        
 def get_website_content(url):
     driver = None
     try:
@@ -171,21 +196,24 @@ with st.sidebar:
                 with st.spinner(" "):
                     blank_slate()
                     time.sleep(0.75)
-    
+
     config_path = st.text_input("Config Location", "./configs/api_test.json")
-    rag_link = st.text_input("New API Document Source", placeholder="enter api doc link...")
-    rag_desc = st.text_area("New API Description (Optional)", placeholder="API docs for...")
-    api_key_name = st.text_input("API Key Name")
-    api_key_val = st.text_input("API Key Value")
+    #rag_link = st.text_input("New API Document Source", placeholder="enter api doc link...")
+    #rag_desc = st.text_area("New API Description (Optional)", placeholder="API docs for...")
+    #api_key_name = st.text_input("API Key Name")
+    #api_key_val = st.text_input("API Key Value")
     if st.button("Create New Agent"):
+        new_agent_config()
         with st.status("Creating New Agent..."):
+            st.session_state.custom_keys.append(st.session_state.tmp_api_info["api_name"])
+            os.environ[st.session_state.tmp_api_info["api_name"]] = st.session_state.tmp_api_info["api_key"]
             st.write("Opening config...")
             with open(config_path, "r") as file:
                 agent_config = json.load(file)
 
             rag_doc = {
-                "source": rag_link,
-                "desc": rag_desc,
+                "source": st.session_state.tmp_api_info["docs_link"],
+                "desc": st.session_state.tmp_api_info["api_desc"],
                 "num": 1
             }
             agent_config["rag_docs"].append(rag_doc)
@@ -196,6 +224,7 @@ with st.sidebar:
             st.write("Generating new agent...")
             gen_agent(config_path,model_option, get_model_provider(model_option))
             st.write("Clearing chat...")
+            st.session_state.tmp_api_info = {key: None for key in st.session_state.tmp_api_info}
             st.session_state.INPUT_DIR = config_option
             blank_slate()
             #st.rerun()
