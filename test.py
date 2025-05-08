@@ -69,7 +69,7 @@ def new_agent_config():
         api_info["api_desc"] = api_desc
         st.session_state.tmp_api_info = api_info
         st.rerun()
-        
+
 def get_website_content(url):
     driver = None
     try:
@@ -204,6 +204,7 @@ with st.sidebar:
     #api_key_val = st.text_input("API Key Value")
     if st.button("Create New Agent"):
         new_agent_config()
+        st.write(st.session_state.tmp_api_info)
         with st.status("Creating New Agent..."):
             st.session_state.custom_keys.append(st.session_state.tmp_api_info["api_name"])
             os.environ[st.session_state.tmp_api_info["api_name"]] = st.session_state.tmp_api_info["api_key"]
