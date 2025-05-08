@@ -204,10 +204,7 @@ with st.sidebar:
                     time.sleep(0.75)
 
     config_path = st.text_input("Config Location", "./configs/api_test.json")
-    #rag_link = st.text_input("New API Document Source", placeholder="enter api doc link...")
-    #rag_desc = st.text_area("New API Description (Optional)", placeholder="API docs for...")
-    #api_key_name = st.text_input("API Key Name")
-    #api_key_val = st.text_input("API Key Value")
+
     if st.button("Create New Agent"):
         new_agent_config()
     if st.button("Load Agent"):
