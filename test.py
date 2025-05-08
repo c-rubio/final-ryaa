@@ -70,7 +70,10 @@ def new_agent_config():
         api_info["api_desc"] = api_desc
         st.session_state.tmp_api_info = api_info
         st.rerun()
-
+def load_json(path):
+    with open(path, 'r') as file:
+        data = json.load(file)
+    return data
 def get_website_content(url):
     driver = None
     try:
@@ -178,6 +181,8 @@ with st.sidebar:
             workers = config.get("workers", []),
             slotsfillapi = config["slotfillapi"]
         )
+        st.write(config)
+        st.write(load_json(os.path.join(config_option, "taskplanning.json")))
     
     model_option = st.selectbox(
         "Model", models, 
