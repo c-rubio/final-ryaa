@@ -204,7 +204,7 @@ with st.sidebar:
     #api_key_val = st.text_input("API Key Value")
     if st.button("Create New Agent"):
         new_agent_config()
-    if st.session_state.tmp_api_info["api_name"]:
+    if st.button("Load Agent"):
         st.write(st.session_state.tmp_api_info)
         with st.status("Creating New Agent..."):
             st.session_state.custom_keys.append(st.session_state.tmp_api_info["api_name"])
