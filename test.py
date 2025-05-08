@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 from sl.utils import agent_response, gen_stream, gen_worker_list, display_workers, get_model_provider, load_secrets, gen_agent
 load_secrets()
+#from sl.audio_utils import transcribe_audio, tts_conversion
 
 from arklex.utils.utils import init_logger
 from arklex.orchestrator.orchestrator import AgentOrg
@@ -129,6 +130,7 @@ if "history" not in st.session_state:
 
 with st.sidebar:
     voice = st.toggle("Voice")
+    voice_output = st.toggle("Voice Output")
     debug = st.toggle("Debug Mode", value=False)
     config_option = "./agent/api_agent0"
     #config_option = st.selectbox(
