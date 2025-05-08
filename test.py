@@ -201,7 +201,7 @@ with st.sidebar:
             gen_agent(config_path,model_option, get_model_provider(model_option))
             st.write("Clearing chat...")
             st.session_state.tmp_api_info = {key: None for key in st.session_state.tmp_api_info}
-            st.session_state.INPUT_DIR = config_option
+            st.session_state.INPUT_DIR = "./agent/api_agent0"
             reset_config(debug)
             blank_slate()
             #st.rerun()
