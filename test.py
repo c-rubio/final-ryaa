@@ -25,6 +25,7 @@ import time
 from bs4 import BeautifulSoup
 
 #st.session_state.INPUT_DIR = "./agent/cs_test"
+st.session_state.gen_counter = 0
 MODEL["model_type_or_path"] = "gpt-4.1"
 LOG_LEVEL = "WARNING"
 WORKER_PREFIX = "assistant"
@@ -137,7 +138,7 @@ with st.sidebar:
         "Agent",
         ("./agent/api_assistant",
          "./agent/api_assistant2",
-         "./agent/api_test_final",
+         "./agent/api_agent0",
          "./agent/cs_test",
          "./agent/cs_test2")
     )
@@ -174,6 +175,8 @@ with st.sidebar:
     config_path = st.text_input("Config Location", "./configs/api_test.json")
     rag_link = st.text_input("New API Document Source", placeholder="enter api doc link...")
     rag_desc = st.text_area("New API Description (Optional)", placeholder="API docs for...")
+    api_key_name = st.text_input("API Key Name")
+    api_key_val = st.text_input("API Key Value")
     if st.button("Create New Agent"):
         with st.status("Creating New Agent..."):
             st.write("Opening config...")
