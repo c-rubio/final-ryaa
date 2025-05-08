@@ -35,12 +35,13 @@ if "tmp_api_info" not in st.session_state:
 if "INPUT_DIR" not in st.session_state:
     st.session_state.INPUT_DIR = "./agent/cs_test"
     os.environ["DATA_DIR"] = st.session_state.INPUT_DIR
-    config = json.load(open(os.path.join(st.session_state.INPUT_DIR, "taskgraph.json")))
-    env = Env(
-    tools = config.get("tools", []),
-    workers = config.get("workers", []),
-    slotsfillapi = config["slotfillapi"]
+    st.session_state.config = json.load(open(os.path.join(st.session_state.INPUT_DIR, "taskgraph.json")))
+    st.session_state.env = Env(
+        tools = st.session_state.config.get("tools", []),
+        workers = st.session_state.config.get("workers", []),
+        slotsfillapi = st.session_state.config["slotfillapi"]
     )
+
 MODEL["model_type_or_path"] = "gpt-4.1"
 LOG_LEVEL = "WARNING"
 WORKER_PREFIX = "assistant"
@@ -86,11 +87,11 @@ def reset_config(debug=True):
         data_dir = st.session_state.INPUT_DIR
         os.environ["DATA_DIR"] = data_dir
         if debug: st.write(os.environ["DATA_DIR"])
-        config = json.load(open(os.path.join(data_dir, "taskgraph.json")))
-        env = Env(
-            tools = config.get("tools", []),
-            workers = config.get("workers", []),
-            slotsfillapi = config["slotfillapi"]
+        st.session_state.config = json.load(open(os.path.join(data_dir, "taskgraph.json")))
+        st.session_state.env = Env(
+            tools = st.session_state.config.get("tools", []),
+            workers = st.session_state.config.get("workers", []),
+            slotsfillapi = st.session_state.config["slotfillapi"]
         )
         if debug: 
             st.write(config)
@@ -233,7 +234,7 @@ if prompt := st.chat_input("Ask Ryaa"):
     st.session_state.workers.append("")    
     with st.spinner("Loading..."):
         output, st.session_state.params, hitl = agent_response(st.session_state.INPUT_DIR, st.session_state.history, 
-                                                               prompt, st.session_state.params, env)
+                                                               prompt, st.session_state.params, st.session_state.env)
         
         workers, sources = gen_worker_list(st.session_state.params) 
 
