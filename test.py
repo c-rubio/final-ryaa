@@ -147,6 +147,16 @@ with st.sidebar:
          "./agent/cs_test2")
     )
     st.session_state.INPUT_DIR=config_option
+    with st.button("reload config"):
+        os.environ["DATA_DIR"] = st.session_state.INPUT_DIR
+        st.write(os.environ["DATA_DIR"])
+        config = json.load(open(os.path.join(st.session_state.INPUT_DIR, "taskgraph.json")))
+        env = Env(
+            tools = config.get("tools", []),
+            workers = config.get("workers", []),
+            slotsfillapi = config["slotfillapi"]
+        )
+    
     model_option = st.selectbox(
         "Model", models, 
         help="""
@@ -188,6 +198,7 @@ with st.sidebar:
             st.write("Generating new agent...")
             gen_agent(config_path,model_option, get_model_provider(model_option))
             st.write("Clearing chat...")
+            st.session_state.INPUT_DIR = config_option
             blank_slate()
             #st.rerun()
 
