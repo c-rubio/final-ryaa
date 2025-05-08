@@ -138,15 +138,16 @@ with st.sidebar:
     voice_output = st.toggle("Voice Output")
     debug = st.toggle("Debug Mode", value=False)
     config_option = "./agent/api_agent0"
-    #config_option = st.selectbox(
-    #    "Agent",
-    #    ("./agent/api_assistant",
-    #     "./agent/api_assistant2",
+    config_option = st.selectbox(
+        "Agent",
+        ("./agent/blb_agent",
+         "./agent/ryaa_test")
     #     "./agent/api_agent0",
     #     "./agent/cs_test",
     #     "./agent/cs_test2")
     #)  if debug:
-    #st.session_state.INPUT_DIR=config_option
+    )
+    st.session_state.INPUT_DIR=config_option
     if debug:
         if st.button("reload config"):
             reset_config(debug)
