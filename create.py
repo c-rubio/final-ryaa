@@ -17,17 +17,14 @@ from arklex.env.tools.RAG.build_rag import build_rag
 from arklex.env.tools.database.build_database import build_database
 from arklex.utils.model_config import MODEL
 from arklex.utils.model_provider_config import LLM_PROVIDERS, PROVIDER_MAP
-import streamlit as st
+
 logger = init_logger(log_level=logging.INFO, filename=os.path.join(os.path.dirname(__file__), "logs", "arklex.log"))
 load_dotenv()
 
 def generate_taskgraph(args):
     model = PROVIDER_MAP.get(MODEL['llm_provider'], ChatOpenAI)(model=MODEL["model_type_or_path"],timeout=30000)
-    st.write("Model")
     generator = Generator(args, args.config, model, args.output_dir)
-    st.write("Generator")
     taskgraph_filepath = generator.generate()
-    st.write("taskgraph")
     # Update the task graph with the API URLs
     task_graph = json.load(open(os.path.join(os.path.dirname(__file__), taskgraph_filepath)))
     task_graph["nluapi"] = ""
@@ -38,13 +35,9 @@ def generate_taskgraph(args):
 
 def init_worker(args):
     ## TODO: Need to customized based on different use cases
-    st.write("at init worker")
     config = json.load(open(args.config))
-    st.write("loaded json")
     workers = config["workers"]
-    
     worker_names = set([worker["name"] for worker in workers])
-    st.write("past workers")
     if "FaissRAGWorker" in worker_names:
         logger.info("Initializing FaissRAGWorker...")
         build_rag(args.output_dir, config["rag_docs"])

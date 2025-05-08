@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 from pprint import pprint
 import pandas as pd
 import io
-import argparse
-from sl.utils import agent_response, gen_stream, gen_worker_list, display_workers, get_model_provider, load_secrets
+
+from sl.utils import agent_response, gen_stream, gen_worker_list, display_workers, get_model_provider, load_secrets, gen_agent
 load_secrets()
 
 from arklex.utils.utils import init_logger
@@ -158,39 +158,39 @@ with st.sidebar:
                 with st.spinner(" "):
                     blank_slate()
                     time.sleep(0.75)
-    st.write(os.listdir("."))
-    config_area = st.text_input("Config Location", "./configs/api_assistant.json")
-    if st.button("GenThings"):
-        #text = get_website_content("https://www.alphavantage.co/documentation/")
-        #st.write(text)
-        
-        args = argparse.Namespace()
-        args.config = config_area
-        args.output_dir = "./agent/api_assistant3"
-        #args.output_dir = os.path.abspath("./agent/api_assistant3")
-        args.model = "gpt-4.1"
-        args.provider = "openai"
-        args.log_level = "DEBUG"
-        args.task = "all"
-        if not os.path.exists(args.output_dir):
-            os.makedirs(args.output_dir, exist_ok=True)
-        st.write("got to gen")
-        gen.generate_taskgraph(args)
-        gen.init_worker(args)
-        st.write("finished")
-        if os.path.isdir("./agent/api_assistant3"):
-            os.listdir("./agent/api_assistant3")
-            st.write("is path")
-        st.session_state.INPUT_DIR = "./agent/api_assistant3"
-        st.write("new")
-        st.write(os.listdir("."))
+    
+    config_path = st.text_input("Config Location", "./configs/api_assistant.json")
+    rag_link = st.text_input("New API Document Source", placeholder="enter api doc link...")
+    rag_desc = st.text_area("New API Description (Optional)", placeholder="API docs for...")
+    if st.button("Create New Agent"):
+        with st.status("Creating New Agent..."):
+            st.write("Opening config...")
+            with open(config_path, "r") as file:
+                agent_config = json.load(file)
+
+            rag_doc = {
+                "source": rag_link,
+                "desc": rag_desc,
+                "num": 1
+            }
+            agent_config["rag_docs"].append(rag_doc)
+            st.write("Writing to config...")
+            with open(config_path, "w") as file:
+                json.dump(agent_config, file, indent=2)
+            #st.success(f"New Doc Added {rag_link}")
+            st.write("Generating new agent...")
+            gen_agent(config_path,model_option, get_model_provider(model_option))
+            st.write("Clearing chat...")
+            blank_slate()
+            #st.rerun()
+
 
 # Chat History Rendering
 if debug: 
     st.write(st.session_state.workers)
     st.write(os.listdir("./agent"))
-    st.session_state.INPUT_DIR="./agent/api_assistant3"
-    st.write(st.session_state.INPUT_DIR)
+    #st.session_state.INPUT_DIR="./agent/api_assistant3"
+    #st.write(st.session_state.INPUT_DIR)
     
 for message, workers in zip(st.session_state.history, st.session_state.workers):
     history_icon = LOGO_MICRO if message["role"] == "assistant" else ICON_HUMAN
@@ -214,8 +214,6 @@ if prompt := st.chat_input("Ask Ryaa"):
                                                                prompt, st.session_state.params, env)
         
         workers, sources = gen_worker_list(st.session_state.params) 
-
-        
 
     with st.chat_message("assistant", avatar=LOGO_MICRO):
         if debug: 
