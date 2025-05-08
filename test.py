@@ -1,12 +1,8 @@
 import os
 import json
 import time
-import logging
 import streamlit as st
 from dotenv import load_dotenv
-from pprint import pprint
-import pandas as pd
-import io
 
 from sl.utils import agent_response, gen_stream, gen_worker_list, display_workers, get_model_provider, load_secrets, gen_agent
 load_secrets()
@@ -16,15 +12,9 @@ from arklex.orchestrator.orchestrator import AgentOrg
 from arklex.utils.model_config import MODEL
 from arklex.utils.model_provider_config import LLM_PROVIDERS
 from arklex.env.env import Env
-import create as gen
 
-import time
-
-#st.session_state.INPUT_DIR = "./agent/cs_test"
 st.session_state.gen_counter = 0
 st.session_state.custom_keys = []
-st.session_state.tmp_api_name = ""
-st.session_state.tmp_api_key = ""
 if "tmp_api_info" not in st.session_state:
     st.session_state.tmp_api_info = {
         "api_name": None,
@@ -103,7 +93,6 @@ def blank_slate():
     st.session_state.params = {}
     st.session_state.workers = []
     st.session_state.empty = True
-    #reset_config()
 
     # derived from Arklex, grab configured start response from config
     #for node in config["nodes"]:
