@@ -29,12 +29,13 @@ st.session_state.gen_counter = 0
 st.session_state.custom_keys = []
 st.session_state.tmp_api_name = ""
 st.session_state.tmp_api_key = ""
-st.session_state.tmp_api_info = {
-    "api_name": None,
-    "api_key": None,
-    "docs_link": None,
-    "api_desc": None
-}
+if not st.session_state.tmp_api_info:
+    st.session_state.tmp_api_info = {
+        "api_name": None,
+        "api_key": None,
+        "docs_link": None,
+        "api_desc": None
+    }
 MODEL["model_type_or_path"] = "gpt-4.1"
 LOG_LEVEL = "WARNING"
 WORKER_PREFIX = "assistant"
