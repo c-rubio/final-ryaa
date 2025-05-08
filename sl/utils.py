@@ -89,7 +89,7 @@ def load_secrets():
 def gen_agent(config_path, model_option, model_provider):
     args = argparse.Namespace()
     args.config = config_path
-    args.output_dir = "./agent/cs_test2"
+    args.output_dir = "./agent/api_test_final"
     args.model = model_option
     args.llm_provider = model_provider
     args.log_level = "INFO"

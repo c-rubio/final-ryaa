@@ -103,8 +103,8 @@ def blank_slate():
     #        start_message = node[1]["attribute"]["value"]
     #        break
 
-    st.session_state.history.append({"role": WORKER_PREFIX, "content": start_message})
-    st.session_state.workers.append("")  # ensure worker list maintains equivalent index to history
+    #st.session_state.history.append({"role": WORKER_PREFIX, "content": start_message})
+    #st.session_state.workers.append("")  # ensure worker list maintains equivalent index to history
 
 # env, config derived from Arklex, "run.py" file
 
@@ -137,6 +137,7 @@ with st.sidebar:
         "Agent",
         ("./agent/api_assistant",
          "./agent/api_assistant2",
+         "./agent/api_test_final"
          "./agent/cs_test",
          "./agent/cs_test2")
     )
@@ -170,7 +171,7 @@ with st.sidebar:
                     blank_slate()
                     time.sleep(0.75)
     
-    config_path = st.text_input("Config Location", "./configs/api_assistant.json")
+    config_path = st.text_input("Config Location", "./configs/api_test.json")
     rag_link = st.text_input("New API Document Source", placeholder="enter api doc link...")
     rag_desc = st.text_area("New API Description (Optional)", placeholder="API docs for...")
     if st.button("Create New Agent"):

@@ -5,7 +5,11 @@
   "domain": "Web APIs & Financial Data",
   "intro": "This agent specializes in interacting with web APIs, particularly the Alpha Vantage API for financial data (documented at https://www.alphavantage.co/documentation/). It uses RAG to understand API details but aims to use the ApiWorker directly when the user clearly requests an action like 'get stock price for IBM'.",
   "task_docs": [],
-  "rag_docs": [],
+  "rag_docs": [{
+    "source": "https://www.alphavantage.co/documentation/",
+    "desc": "Alpha Vantage API documentation used by the RAG worker to understand API endpoints, parameters, and usage for the API worker.",
+    "num": 1 
+  }],
   "tasks": [
       "Fetch Real-time Stock Price via API", 
       "Understand API Endpoint Usage",
@@ -30,3 +34,4 @@
   ],
   "tools": []
 }
+
