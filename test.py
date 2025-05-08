@@ -28,7 +28,7 @@ if "tmp_api_info" not in st.session_state:
         "api_desc": None
     }
 if "INPUT_DIR" not in st.session_state:
-    st.session_state.INPUT_DIR = "./agent/cs_test"
+    st.session_state.INPUT_DIR = "./agent/ryaa_test"
     os.environ["DATA_DIR"] = st.session_state.INPUT_DIR
     st.session_state.config = json.load(open(os.path.join(st.session_state.INPUT_DIR, "taskgraph.json")))
     st.session_state.env = Env(
