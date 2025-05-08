@@ -94,9 +94,9 @@ def reset_config(debug=True):
             slotsfillapi = st.session_state.config["slotfillapi"]
         )
         if debug: 
-            st.write(config)
+            st.write(st.session_state.config)
             st.write(load_json(os.path.join(data_dir, "taskplanning.json")))
-        return config, env
+        
 
 def blank_slate():
     st.session_state.history = []
@@ -153,7 +153,7 @@ with st.sidebar:
     #st.session_state.INPUT_DIR=config_option
 
     if st.button("reload config"):
-        config, env = reset_config(debug)
+        reset_config(debug)
     
     model_option = st.selectbox(
         "Model", models, 
@@ -179,7 +179,7 @@ with st.sidebar:
     if st.button("Create New Agent"):
         new_agent_config()
     if st.button("Load Agent"):
-        st.write(st.session_state.tmp_api_info)
+        if debug: st.write(st.session_state.tmp_api_info)
         with st.status("Creating New Agent..."):
             st.session_state.custom_keys.append(st.session_state.tmp_api_info["api_name"])
             os.environ[st.session_state.tmp_api_info["api_name"]] = st.session_state.tmp_api_info["api_key"]
@@ -202,7 +202,7 @@ with st.sidebar:
             st.write("Clearing chat...")
             st.session_state.tmp_api_info = {key: None for key in st.session_state.tmp_api_info}
             st.session_state.INPUT_DIR = config_option
-            st.session_state.config, st.session_state.env = reset_config(debug)
+            reset_config(debug)
             blank_slate()
             #st.rerun()
 
