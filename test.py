@@ -24,7 +24,7 @@ from selenium.webdriver.chrome.service import Service
 import time
 from bs4 import BeautifulSoup
 
-st.session_state.INPUT_DIR = "./agent/cs_test"
+#st.session_state.INPUT_DIR = "./agent/cs_test"
 MODEL["model_type_or_path"] = "gpt-4.1"
 LOG_LEVEL = "WARNING"
 WORKER_PREFIX = "assistant"
@@ -107,13 +107,7 @@ def blank_slate():
     st.session_state.workers.append("")  # ensure worker list maintains equivalent index to history
 
 # env, config derived from Arklex, "run.py" file
-os.environ["DATA_DIR"] = st.session_state.INPUT_DIR
-config = json.load(open(os.path.join(st.session_state.INPUT_DIR, "taskgraph.json")))
-env = Env(
-    tools = config.get("tools", []),
-    workers = config.get("workers", []),
-    slotsfillapi = config["slotfillapi"]
-)
+
 
 # Streamlit GUI
 st.set_page_config(
@@ -202,6 +196,13 @@ with st.sidebar:
             blank_slate()
             #st.rerun()
 
+os.environ["DATA_DIR"] = st.session_state.INPUT_DIR
+config = json.load(open(os.path.join(st.session_state.INPUT_DIR, "taskgraph.json")))
+env = Env(
+    tools = config.get("tools", []),
+    workers = config.get("workers", []),
+    slotsfillapi = config["slotfillapi"]
+)
 
 # Chat History Rendering
 if debug: 
