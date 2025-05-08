@@ -72,6 +72,8 @@ def display_workers(workers):
         color = worker_colors.get(worker, "yellow")
         name = worker_names.get(worker, worker)
         markdown_str += f":{color}-badge[{name}] "
+        if color == "yellow":
+            markdown_str = f""
     st.markdown(markdown_str)
 
 def get_model_provider(model):  
