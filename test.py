@@ -147,7 +147,7 @@ with st.sidebar:
          "./agent/cs_test2")
     )
     st.session_state.INPUT_DIR=config_option
-    with st.button("reload config"):
+    if st.button("reload config"):
         os.environ["DATA_DIR"] = st.session_state.INPUT_DIR
         st.write(os.environ["DATA_DIR"])
         config = json.load(open(os.path.join(st.session_state.INPUT_DIR, "taskgraph.json")))
