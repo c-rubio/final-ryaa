@@ -29,7 +29,7 @@ st.session_state.gen_counter = 0
 st.session_state.custom_keys = []
 st.session_state.tmp_api_name = ""
 st.session_state.tmp_api_key = ""
-if not st.session_state.tmp_api_info:
+if "tmp_api_info" not in st.session_state:
     st.session_state.tmp_api_info = {
         "api_name": None,
         "api_key": None,
