@@ -202,7 +202,7 @@ with st.sidebar:
             st.write("Clearing chat...")
             st.session_state.tmp_api_info = {key: None for key in st.session_state.tmp_api_info}
             st.session_state.INPUT_DIR = config_option
-            config, env = reset_config(debug)
+            st.session_state.config, st.session_state.env = reset_config(debug)
             blank_slate()
             #st.rerun()
 
