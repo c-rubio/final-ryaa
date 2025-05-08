@@ -139,7 +139,14 @@ if "history" not in st.session_state:
 with st.sidebar:
     voice = st.toggle("Voice")
     debug = st.toggle("Debug Mode", value=False)
-
+    config_option = st.selectbox(
+        "Agent",
+        ("./agent/api_assistant",
+         "./agent/api_assistant2",
+         "./agent/cs_test",
+         "./agent/cs_test2")
+    )
+    st.session_state.INPUT_DIR=config_option
     model_option = st.selectbox(
         "Model", models, 
         help="""
@@ -189,7 +196,7 @@ with st.sidebar:
 if debug: 
     st.write(st.session_state.workers)
     st.write(os.listdir("./agent"))
-    st.session_state.INPUT_DIR="./agent/cs_test2"
+    
     #st.write(st.session_state.INPUT_DIR)
     
 for message, workers in zip(st.session_state.history, st.session_state.workers):
