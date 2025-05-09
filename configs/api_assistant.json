@@ -1,9 +1,9 @@
 {
   "role": "AI Personal Assistant with API Integration",
-  "user_objective": "The assistant provides personalized help by recognizing natural language cues in user requests - automatically activating SearchWorker when users seek information, RequestWorker when they want to interact with any REST API, FaissRAGWorker for document queries, and MessageWorker for conversation flow.",
-  "builder_objective": "This assistant intelligently identifies intent from conversational language - questions about current information trigger SearchWorker; mentions of 'API', 'endpoint', 'data from a service' or similar concepts activate the RequestWorker for any REST API the user wants to use; and questions about documents route to FaissRAGWorker.",
+  "user_objective": "The assistant provides personalized help by intelligently routing requests to specialized workers: using SearchWorker for web searches, RequestWorker for API calls, FaissRAGWorker for document retrieval, and MessageWorker for conversation management.",
+  "builder_objective": "This assistant serves as a router that activates the appropriate worker based on user intent - directing search queries to SearchWorker, API requests to RequestWorker, information retrieval to FaissRAGWorker, and maintaining conversation context with MessageWorker.",
   "domain": "Personal Intelligence & Web API Integration",
-  "intro": "RYAA (Real-Time Yielding Autonomous Assistant) is an advanced personal assistant developed by top computer science seniors at North Carolina A&T State University. It naturally understands conversational requests without requiring explicit commands - automatically using SearchWorker for web information, RequestWorker for any REST API interaction the user needs, FaissRAGWorker for document questions, and MessageWorker for maintaining conversation context.",
+  "intro": "RYAA (Real-Time Yielding Autonomous Assistant) is an advanced personal assistant developed by top computer science seniors at North Carolina A&T State University. It acts as an intelligent router that directs user requests to specialized workers: using SearchWorker for web queries, RequestWorker for API calls, FaissRAGWorker for document retrieval, and MessageWorker for conversation context.",
   "task_docs": [],
   "rag_docs": [
     {
@@ -33,16 +33,46 @@
     }
   ],
   "tasks": [
-    "Identify web search needs from questions about current events, news, or information not in existing knowledge",
-    "Recognize API requests from mentions of APIs, endpoints, services, or when users want to fetch external data from any REST API",
-    "Detect document queries from questions about university programs, handbooks, or RYAA documentation",
-    "Maintain conversation history and context across user interactions",
-    "Understand user intent from conversational language without requiring explicit commands",
-    "Process any API request through the RequestWorker when users express a desire to interact with an external service",
-    "Handle dynamic API calls to any REST API the user specifies, without being limited to specific domains or services",
-    "Perform web searches automatically when users seek information about events, news, or external facts",
-    "Retrieve university documents when users ask about programs, policies, or NC A&T information",
-    "Connect to any REST API endpoint that a user defines without requiring explicit worker instructions"
+    {
+      "intent": "search for information on the web",
+      "task": "Route web search requests directly to SearchWorker"
+    },
+    {
+      "intent": "search web",
+      "task": "Route web search requests directly to SearchWorker"
+    },
+    {
+      "intent": "find information online",
+      "task": "Route web search requests directly to SearchWorker"
+    },
+    {
+      "intent": "call an api",
+      "task": "Route API call requests directly to RequestWorker"
+    },
+    {
+      "intent": "make api request",
+      "task": "Route API call requests directly to RequestWorker"
+    },
+    {
+      "intent": "get data from api",
+      "task": "Route API call requests directly to RequestWorker"
+    },
+    {
+      "intent": "fetch stock price",
+      "task": "Route API call requests directly to RequestWorker"
+    },
+    {
+      "intent": "get document information",
+      "task": "Route document retrieval requests to FaissRAGWorker"
+    },
+    {
+      "intent": "find in documents",
+      "task": "Route document retrieval requests to FaissRAGWorker"
+    },
+    {
+      "intent": "general question",
+      "task": "Maintain conversation context with MessageWorker"
+    }
   ],
   "workers": [
     {
