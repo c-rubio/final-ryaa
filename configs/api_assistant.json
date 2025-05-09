@@ -58,10 +58,6 @@
       "task": "Route API call requests directly to RequestWorker"
     },
     {
-      "intent": "fetch stock price",
-      "task": "Route API call requests directly to RequestWorker"
-    },
-    {
       "intent": "get document information",
       "task": "Route document retrieval requests to FaissRAGWorker"
     },
