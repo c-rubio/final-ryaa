@@ -15,11 +15,13 @@ from arklex.utils.model_provider_config import LLM_PROVIDERS
 from arklex.env.env import Env
 
 
-
-st.session_state.gen_counter = 0
-st.session_state.custom_keys = []
+if "custom_keys" not in st.session_state:
+    st.session_state.custom_keys = []
+if "gen_counter" not in st.session_state:
+    st.session_state.gen_counter = 0
 if "agent_btn_disabled" not in st.session_state:
     st.session_state.agent_btn_disabled = True
+
 if "tmp_api_info" not in st.session_state:
     st.session_state.tmp_api_info = {
         "api_name": None,
@@ -27,6 +29,7 @@ if "tmp_api_info" not in st.session_state:
         "docs_link": None,
         "api_desc": None
     }
+
 if "INPUT_DIR" not in st.session_state:
     #ryaa_test
     st.session_state.INPUT_DIR = "./agent/blb_agent"
@@ -63,8 +66,8 @@ def new_agent_config():
     
     api_name = st.text_input("API Key Name")
     api_key = st.text_input("API Key")
-    docs_link = st.text_input("API Documentation Source", placeholder="enter api doc link...")
-    api_desc = st.text_input("API Docs Description", placeholder="API docs for...")
+    docs_link = st.text_input("API Documentation Source", placeholder="Enter Link to Docs...")
+    api_desc = st.text_input("API Docs Description", placeholder="API Docs for...")
 
     if st.button("Submit"):
         api_info["api_name"] = api_name
@@ -109,8 +112,6 @@ def blank_slate():
     #st.session_state.history.append({"role": WORKER_PREFIX, "content": start_message})
     #st.session_state.workers.append("")  # ensure worker list maintains equivalent index to history
 
-# env, config derived from Arklex, "run.py" file
-
 
 # Streamlit GUI
 st.set_page_config(
@@ -137,22 +138,20 @@ with st.sidebar:
     voice = st.toggle("Voice")
     voice_output = st.toggle("Voice Output")
     debug = st.toggle("Debug Mode", value=False)
-    config_option = "./agent/api_agent0"
-    config_option = st.selectbox(
-        "Agent",
-        ("./agent/blb_agent",
-         "./agent/ryaa_test",
-         "./agent/api_agent0")
-    #     "./agent/api_agent0",
-    #     "./agent/cs_test",
-    #     "./agent/cs_test2")
-    #)  if debug:
-    )
+    config_option = f"./agent/api_agent{st.session_state.gen_counter}"
+    #config_option = st.selectbox(
+    #    "Agent",
+    #    ("./agent/blb_agent",
+    #     "./agent/ryaa_test",
+    #     "./agent/api_agent0")
+    ##     "./agent/api_agent0",
+    ##     "./agent/cs_test",
+    ##     "./agent/cs_test2")
+    ##)  if debug:
+    #)
     st.session_state.INPUT_DIR=config_option
-    if debug:
-        if st.button("reload config"):
-            reset_config(debug)
-    
+    reset_config(debug)
+
     model_option = st.selectbox(
         "Model", models, 
         help="""
@@ -183,6 +182,7 @@ with st.sidebar:
         if st.button("Load Agent", disabled=st.session_state.agent_btn_disabled):
             if debug: st.write(st.session_state.tmp_api_info)
             with st.status("Creating New Agent..."):
+                st.session_state.gen_counter += 1
                 st.session_state.custom_keys.append(st.session_state.tmp_api_info["api_name"])
                 os.environ[st.session_state.tmp_api_info["api_name"]] = st.session_state.tmp_api_info["api_key"]
                 st.write("Opening config...")
@@ -203,11 +203,12 @@ with st.sidebar:
                 gen_agent(config_path,model_option, get_model_provider(model_option))
                 st.write("Clearing chat...")
                 st.session_state.tmp_api_info = {key: None for key in st.session_state.tmp_api_info}
-                st.session_state.INPUT_DIR = "./agent/api_agent0"
+                st.session_state.INPUT_DIR = f"./agent/api_agent{st.session_state.gen_counter}"
                 reset_config(debug)
                 blank_slate()
                 #st.rerun()
                 st.session_state.agent_btn_disabled = True
+                
 
 
 
